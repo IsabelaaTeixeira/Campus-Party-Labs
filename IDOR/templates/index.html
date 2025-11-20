@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechBlog - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background: #f4f4f4;
+        }
+        .navbar {
+            background: #333;
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            font-size: 1.5rem;
+        }
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            background: #555;
+            border-radius: 5px;
+        }
+        .navbar a:hover {
+            background: #777;
+        }
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .blog-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .blog-card h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        .blog-card p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        .blog-card .date {
+            color: #999;
+            font-size: 0.9rem;
+        }
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🚀 TechBlog</h1>
+        <a href="/login">Login</a>
+    </nav>
+
+    <div class="hero">
+        <h2>Welcome to TechBlog</h2>
+        <p>Your source for the latest technology news and insights</p>
+    </div>
+
+    <div class="container">
+        <h2 style="margin-bottom: 1rem;">Latest Articles</h2>
+        <div class="blog-grid">
+            <div class="blog-card">
+                <h3>Getting Started with Python</h3>
+                <p>Learn the basics of Python programming and start building amazing applications today.</p>
+                <span class="date">Posted on Jan 15, 2024</span>
+            </div>
+            <div class="blog-card">
+                <h3>Web Security Best Practices</h3>
+                <p>Discover essential security measures every web developer should implement in their applications.</p>
+                <span class="date">Posted on Jan 10, 2024</span>
+            </div>
+            <div class="blog-card">
+                <h3>Cloud Computing Trends</h3>
+                <p>Explore the latest trends in cloud computing and how they're shaping the future of technology.</p>
+                <span class="date">Posted on Jan 5, 2024</span>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 TechBlog. All rights reserved.</p>
+    </footer>
+</body>
+</html>

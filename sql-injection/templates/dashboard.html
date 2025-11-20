@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureBank - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .slide-in { animation: slideIn 0.5s ease-out; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .pulse { animation: pulse 2s infinite; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                    <h1 class="text-2xl font-bold">SecureBank Dashboard</h1>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <p class="text-sm text-blue-100">Conectado como</p>
+                        <p class="font-semibold text-lg">{{ current_user }}</p>
+                        <span class="inline-block text-xs bg-white text-blue-600 px-3 py-1 rounded-full font-semibold mt-1">
+                            {{ role.upper() }}
+                        </span>
+                    </div>
+                    <a href="{{ url_for('logout') }}" class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition font-semibold">
+                        Sair
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- SQL Injection Alert -->
+        {% if sql_injected %}
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 slide-in">
+            <div class="flex items-start">
+                <svg class="w-6 h-6 text-red-500 mr-3 flex-shrink-0 pulse" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                </svg>
+                <div>
+                    <p class="text-sm font-bold text-red-800">
+                        ⚠️ SQL INJECTION BEM-SUCEDIDA - ACESSO ADMIN OBTIDO!
+                    </p>
+                    <p class="text-xs text-red-700 mt-1">
+                        Você agora tem privilégios elevados para visualizar todas as contas e realizar transferências.
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Success Alert (hidden by default) -->
+        <div id="success-alert" class="hidden bg-green-50 border-l-4 border-green-500 p-4 mb-6 slide-in">
+            <div class="flex items-start">
+                <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <p id="success-message" class="text-sm font-semibold text-green-800"></p>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Total Accounts -->
+            <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition slide-in">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Total de Contas</p>
+                        <p class="text-4xl font-bold text-gray-800 mt-2">{{ users|length }}</p>
+                    </div>
+                    <svg class="w-14 h-14 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Your Balance -->
+            <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition slide-in" style="animation-delay: 0.1s">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Seu Saldo</p>
+                        {% for user in users %}
+                            {% if user['username'] == current_user %}
+                            <p class="text-4xl font-bold text-green-600 mt-2">
+                                R$ {{ "{:,.2f}".format(user['balance']) }}
+                            </p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <svg class="w-14 h-14 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Access Level -->
+            <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition slide-in" style="animation-delay: 0.2s">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Nível de Acesso</p>
+                        <p class="text-3xl font-bold text-purple-600 mt-2 uppercase">{{ role }}</p>
+                    </div>
+                    <svg class="w-14 h-14 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accounts Table -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6 slide-in" style="animation-delay: 0.3s">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                </svg>
+                Detalhes das Contas
+            </h2>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gradient-to-r from-gray-100 to-gray-200">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                Usuário
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                Função
+                            </th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                Saldo
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        {% for user in users %}
+                        <tr class="hover:bg-gray-50 transition {% if user['username'] == 'pessoaMuitoMuitoRica' %}bg-yellow-50{% endif %}">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span class="font-semibold text-gray-900">{{ user['username'] }}</span>
+                                    {% if user['username'] == 'pessoaMuitoMuitoRica' %}
+                                    <span class="ml-2 text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded-full font-bold">
+                                        🎯 ALTO VALOR
+                                    </span>
+                                    {% endif %}
+                                    {% if user['username'] == current_user %}
+                                    <span class="ml-2 text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded-full font-bold">
+                                        VOCÊ
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-3 py-1 text-xs font-bold rounded-full bg-blue-100 text-blue-800 uppercase">
+                                    {{ user['role'] }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="text-xl font-bold text-green-600">
+                                    R$ {{ "{:,.2f}".format(user['balance']) }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Transfer Section - For All Users -->
+        <div class="bg-white rounded-xl shadow-md p-6 slide-in" style="animation-delay: 0.4s">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                </svg>
+                {% if role == 'admin' %}Funções de Administrador{% else %}Transferir Dinheiro{% endif %}
+            </h2>
+
+            {% if role == 'admin' %}
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                <p class="text-sm text-yellow-800">
+                    <strong>⚠️ Demonstração:</strong> Como administrador, você pode manipular saldos de qualquer conta e transferir fundos.
+                </p>
+            </div>
+            {% else %}
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <p class="text-sm text-blue-800">
+                    <strong>💰 Transferências:</strong> Envie dinheiro para outras contas do sistema.
+                </p>
+            </div>
+            {% endif %}
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- From Account -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">
+                        Transferir de:
+                    </label>
+                    {% if role == 'admin' %}
+                    <select 
+                        id="from-user" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                        <option value="{{ current_user }}">{{ current_user }} (Minha conta)</option>
+                        {% for user in users %}
+                            {% if user['username'] != current_user %}
+                            <option value="{{ user['username'] }}">{{ user['username'] }} (R$ {{ "{:,.2f}".format(user['balance']) }})</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    {% else %}
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <p class="font-semibold text-lg">{{ current_user }}</p>
+                        {% for user in users %}
+                            {% if user['username'] == current_user %}
+                            <p class="text-sm text-gray-600 mt-1">
+                                Saldo disponível: <span class="font-bold text-green-600">R$ {{ "{:,.2f}".format(user['balance']) }}</span>
+                            </p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" id="from-user" value="{{ current_user }}">
+                    {% endif %}
+                </div>
+
+                <!-- To Account -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">
+                        Transferir para:
+                    </label>
+                    <input 
+                        type="text" 
+                        id="to-user" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Digite o nome do usuário"
+                    />
+                    <p class="text-xs text-gray-500 mt-1">
+                        Usuários disponíveis: 
+                        {% for user in users %}
+                            {% if user['username'] != current_user %}
+                            <span class="font-semibold">{{ user['username'] }}</span>{% if not loop.last %}, {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                </div>
+
+                <!-- Amount -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">
+                        Valor:
+                    </label>
+                    <div class="flex flex-col space-y-2">
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-gray-500 font-bold">R$</span>
+                            <input 
+                                type="number" 
+                                id="transfer-amount" 
+                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="0,00"
+                                min="0"
+                                step="0.01"
+                            />
+                        </div>
+                        <button 
+                            onclick="performTransfer()"
+                            class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg font-bold hover:from-blue-700 hover:to-purple-700 transition transform hover:scale-105"
+                        >
+                            💸 Transferir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function performTransfer() {
+            const amount = document.getElementById('transfer-amount').value;
+            const fromUser = document.getElementById('from-user').value;
+            const toUser = document.getElementById('to-user').value;
+            
+            if (!amount || parseFloat(amount) <= 0) {
+                alert('Por favor, insira um valor válido.');
+                return;
+            }
+
+            if (!toUser) {
+                alert('Por favor, selecione um destinatário.');
+                return;
+            }
+
+            fetch('{{ url_for("transfer") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `amount=${amount}&from_user=${fromUser}&to_user=${toUser}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const alert = document.getElementById('success-alert');
+                    const message = document.getElementById('success-message');
+                    message.textContent = '✓ ' + data.message;
+                    alert.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    alert('Erro: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Erro ao realizar transferência: ' + error);
+            });
+        }
+    </script>
+</body>
+</html>

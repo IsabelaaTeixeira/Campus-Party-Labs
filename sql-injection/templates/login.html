@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureBank - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900 min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full fade-in">
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white text-center">
+                <div class="flex justify-center mb-4">
+                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold">SecureBank</h1>
+                <p class="text-blue-100 mt-2">Plataforma de Investimentos</p>
+            </div>
+
+            <!-- Body -->
+            <div class="p-8">
+                <!-- Warning Banner -->
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                    <div class="flex items-start">
+                        <svg class="w-5 h-5 text-yellow-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        <div class="text-sm text-yellow-800">
+                            <strong>Workshop Demo:</strong> Sistema vulnerável para fins educacionais
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                {% if error %}
+                <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6 fade-in">
+                    <div class="flex items-start">
+                        <svg class="w-5 h-5 text-red-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                        </svg>
+                        <p class="text-sm text-red-700">{{ error }}</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Login Form -->
+                <form method="POST" action="{{ url_for('login') }}" class="space-y-6">
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
+                            Usuário
+                        </label>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username" 
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                            placeholder="Digite o usuário"
+                        />
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                            Senha
+                        </label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                            placeholder="Digite a senha"
+                        />
+                    </div>
+
+                    <button 
+                        type="submit"
+                        class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition duration-200 transform hover:scale-105"
+                    >
+                        Entrar
+                    </button>
+                </form>
+
+                <!-- SQL Injection Hint -->
+                <div class="mt-6">
+                    <button 
+                        onclick="toggleHint()" 
+                        class="text-sm text-blue-600 hover:text-blue-800 font-medium transition"
+                    >
+                        <span id="hint-toggle">Mostrar Dica de SQL Injection →</span>
+                    </button>
+
+                    <div id="hint-content" class="hidden mt-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <p class="text-sm text-gray-700 font-mono mb-2">
+                            <strong>Query Vulnerável:</strong>
+                        </p>
+                        <code class="block text-xs bg-gray-800 text-green-400 p-3 rounded mb-3 overflow-x-auto">
+SELECT * FROM users WHERE username='...' AND password='...'
+                        </code>
+                        
+                        <p class="text-xs text-gray-500 mt-2">
+                            💡 Esta query concatena strings diretamente, permitindo SQL Injection
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Valid Credentials -->
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <p class="text-xs text-gray-500 text-center">
+                        <strong>Credenciais válidas:</strong><br>
+                        eu / mypass123 (acesso limitado)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleHint() {
+            const content = document.getElementById('hint-content');
+            const toggle = document.getElementById('hint-toggle');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                content.classList.add('fade-in');
+                toggle.textContent = '← Esconder Dica';
+            } else {
+                content.classList.add('hidden');
+                toggle.textContent = 'Mostrar Dica de SQL Injection →';
+            }
+        }
+    </script>
+</body>
+</html>

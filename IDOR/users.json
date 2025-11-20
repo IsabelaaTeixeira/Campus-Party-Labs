@@ -1,0 +1,56 @@
+{
+  "admin": {
+    "password": "admin123",
+    "email": "admin@company.com",
+    "ssn": "123-45-6789",
+    "phone": "+1-555-0100",
+    "address": "123 Admin Street, NY",
+    "credit_card": "4532-1111-2222-3333",
+    "picture": "admin.jpg"
+  },
+  "john": {
+    "password": "john123",
+    "email": "john.doe@email.com",
+    "ssn": "987-65-4321",
+    "phone": "+1-555-0101",
+    "address": "456 User Avenue, CA",
+    "credit_card": "4532-4444-5555-6666",
+    "picture": "john.jpg"
+  },
+  "sarah": {
+    "password": "sarah123",
+    "email": "sarah.smith@email.com",
+    "ssn": "555-12-3456",
+    "phone": "+1-555-0102",
+    "address": "789 Customer Blvd, TX",
+    "credit_card": "4532-7777-8888-9999",
+    "picture": "sarah.jpg"
+  },
+  "mike": {
+    "password": "mike123",
+    "email": "mike.johnson@email.com",
+    "ssn": "111-22-3333",
+    "phone": "+1-555-0103",
+    "address": "321 Guest Lane, FL",
+    "credit_card": "4532-0000-1111-2222",
+    "picture": "mike.jpg"
+  },
+  "thiago": {
+    "password": "oreo",
+    "email": "thiago.boss@email.com",
+    "ssn": "000.000.000-01",
+    "phone": "(62) 99999-1000",
+    "address": "Bar do seu Rai, Goiânia - GO",
+    "credit_card": "MASTER BLACK INFINITE",
+    "picture": "thiagao.jpg"
+  },
+  "isabela": {
+    "password": "123",
+    "email": "voce@workshop.com",
+    "ssn": "999.999.999-99",
+    "phone": "(62) 98888-2000",
+    "address": "Laboratório Secreto, GO",
+    "credit_card": "NUBANK GOLD",
+    "picture": "eu.jpg"
+  }
+}
