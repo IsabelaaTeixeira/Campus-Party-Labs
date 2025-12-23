@@ -35,7 +35,7 @@ http://localhost:5000
 |----------|-----------|
 | admin    | admin123  |
 | john     | john123   |
-| sarah    | sarah123  |
+| thiago   | oreo      |
 | mike     | mike123   |
 
 ## Exploitation Steps
@@ -111,3 +111,4 @@ Students should learn:
 ## License
 
 This lab is provided for educational purposes. Use responsibly.
+
